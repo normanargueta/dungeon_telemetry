@@ -64,6 +64,34 @@ Consumed events are logged by `DungeonTelemetry.Pipeline`.
 mix test
 ```
 
+## Roadmap
+
+This is an early-stage project. Planned work, roughly in order:
+
+### Phase 1: Reliable ingestion
+
+- [ ] Event IDs and idempotent publishing, so retried batches don't create duplicates
+- [ ] Versioned event schema validation with per-event errors
+- [ ] Publish each batch in one Kafka call instead of one call per event
+- [ ] Dead-letter topic (`game.events.dlq`) for events that fail to decode or process
+- [ ] Runtime configuration from env (Kafka hosts, topic, port)
+
+### Phase 2: Make the data useful
+
+- [ ] Session aggregation with Broadway batchers (rooms cleared, deaths, time per floor, loot)
+- [ ] Persist raw events and aggregates (ClickHouse or Postgres)
+- [ ] Live dashboard with Phoenix LiveView: active sessions, deaths per room, hardest monsters
+- [ ] Load generator that simulates players running dungeons
+
+### Phase 3: Run it like a real service
+
+- [ ] `:telemetry` metrics (ingest rate, publish latency, consumer lag) with a Prometheus endpoint
+- [ ] Rate limiting per client, maximum batch size, `429` responses
+- [ ] CI with GitHub Actions, including an integration test against Redpanda
+- [ ] Dockerfile and a one-command `docker compose up` for the full stack
+
+Feedback and ideas are welcome. Feel free to open an issue.
+
 ## License
 
 [MIT](LICENSE)
